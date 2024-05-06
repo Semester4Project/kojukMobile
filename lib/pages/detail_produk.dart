@@ -49,17 +49,15 @@ class DetailProduk extends StatelessWidget {
                   children: [
                     Text(
                       'Jenis: ${produk['type']}',
-                      style: const TextStyle(fontSize: 20,
-                      
-                      ),
+                      style: const TextStyle(fontSize: 20),
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      'Harga: ${produk['price']}',
-                      style:const TextStyle(fontSize: 20,
-                      
-                      ),
+                      'Harga: Rp ${produk['price'].toStringAsFixed(0)}', // Konversi harga menjadi string
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
+
+
                     const SizedBox(height: 20),
                     const Text(
                       "Detail Produk",
@@ -75,12 +73,37 @@ class DetailProduk extends StatelessWidget {
                         fontSize: 15,
                       ),
                     ),
-                    // Tambahkan informasi detail produk lainnya di sini sesuai kebutuhan
-
                     const SizedBox(height: 40),
-
-               ],
-              ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                      
+                          },
+                          icon: Icon(Icons.shopping_cart_checkout),
+                          iconSize: 32,
+                        ),
+                        const SizedBox(width: 8),
+                        ElevatedButton(
+                          onPressed: () {
+                          },
+                          child: Text(
+                            'Beli',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(horizontal: 70, vertical: 20),
+                            backgroundColor: Color.fromRGBO(118, 38, 37, 1),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               )
             ]),
           ),

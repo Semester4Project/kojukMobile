@@ -16,37 +16,37 @@ class _ProdukState extends State<Produk>{
       'image': 'assets/images/kopi.png',
       'type': 'kopi',
       'name': 'kopi Madura',
-      'price': 'Rp.5000,00',
+      'price': 50000,
     },
     {
       'image': 'assets/images/kopi.png',
       'type': 'Robusta',
       'name': 'Robusta Madura',
-      'price': 'Rp.5000,00',
+      'price': 50000,
     },
     {
       'image': 'assets/images/kopi.png',
       'type': 'Robusta',
       'name': 'Robusta Madura',
-      'price': 'Rp.5000,00',
+      'price': 50000,
     },
     {
       'image': 'assets/images/kopi.png',
       'type': 'Robusta',
       'name': 'Robusta jawa',
-      'price': 'Rp.5000,00',
+      'price': 50000,
     },
     {
       'image': 'assets/images/kopi.png',
       'type': 'Robusta',
       'name': 'Robusta Madura',
-      'price': 'Rp.5000,00',
+      'price': 50000,
     },
     {
       'image': 'assets/images/kopi.png',
       'type': 'Robusta',
       'name': 'Robusta medan',
-      'price': 'Rp.5000,00',
+      'price': 50000,
     },
     // Tambahkan produk lainnya sesuai kebutuhan
   ];
@@ -168,9 +168,10 @@ class _ProdukState extends State<Produk>{
                     Text(product['name']),
                     SizedBox(height: 4),
                     Text(
-                      product['price'],
+                      'Harga: Rp ${product['price'].toStringAsFixed(0)}', // Konversi harga menjadi string
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
+
                   ],
                 ),
               ),
