@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kojuk_mobile/components/coffe_tile.dart';
 import 'package:kojuk_mobile/models/coffe.dart';
+import 'package:kojuk_mobile/pages/keranjang.dart';
+
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -19,7 +21,12 @@ class _DashboardState extends State<Dashboard> {
           IconButton(
             icon: const Icon(Icons.shopping_cart_outlined),
             onPressed: () {
-              // Add your shopping cart action here
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Keranjang(),
+                ),
+              ); // Tambahkan fungsi ketika tombol keranjang ditekan
             },
           ),
         ],
@@ -31,7 +38,7 @@ class _DashboardState extends State<Dashboard> {
             // Search bar
             Container(
               padding: const EdgeInsets.all(12),
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(8),
@@ -40,7 +47,7 @@ class _DashboardState extends State<Dashboard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [
                   Text(
-                    'Search',
+                    'search',
                     style: TextStyle(color: Colors.grey),
                   ),
                   Icon(
@@ -52,15 +59,15 @@ class _DashboardState extends State<Dashboard> {
             ),
             // Message
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 25),
               child: Text(
-                'Everyone flies... some fly longer than others.',
+                'everyone flies.. some fly longer than others',
                 style: TextStyle(color: Colors.grey[600]),
               ),
             ),
             // Hot picks
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -84,24 +91,24 @@ class _DashboardState extends State<Dashboard> {
             ),
             const SizedBox(height: 10),
             SizedBox(
-              height: 450, // Adjust the height as needed
+              height: 470, // Adjust the height as needed
               child: ListView.builder(
                 itemCount: 4,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   // Create coffee
                   Coffe coffee = Coffe(
-                    name: 'Robusta Jawa',
+                    name: 'Robusta jawa',
                     price: '500000',
                     image: 'assets/images/coffe2.jpg',
-                    description: 'Robusta',
+                    type: 'Robusta',
                   );
                   return CoffeTile(coffe: coffee);
                 },
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+              padding: const EdgeInsets.only(top: 25.0, left: 25, right: 25),
               child: Divider(
                 color: Colors.grey[300],
               ),

@@ -1,9 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:kojuk_mobile/models/cart_model.dart';
 
 class DetailProduk extends StatelessWidget {
   final Map<String, dynamic> produk;
 
   const DetailProduk({Key? key, required this.produk}) : super(key: key);
+
+  void _tambahkanKeKeranjang(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Tambahkan ke Keranjang"),
+          content: Text("Apakah Anda ingin menambahkan produk ini ke keranjang?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // Tidak
+              },
+              child: Text("Tidak"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Ya
+              },
+              child: Text("Ya"),
+            ),
+          ],
+        );
+      },
+    ).then((value) {
+      if (value != null && value) {
+        Provider.of<CartModel>(context, listen: false).addProduct(Product(
+          image: produk['image'],
+          type: produk['type'],
+          name: produk['name'],
+          price: produk['price'].toDouble(),
+        ));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,11 +90,9 @@ class DetailProduk extends StatelessWidget {
                     ),
                     const SizedBox(height: 3),
                     Text(
-                      'Harga: Rp ${produk['price'].toStringAsFixed(0)}', // Konversi harga menjadi string
+                      'Harga: Rp ${produk['price'].toStringAsFixed(0)}',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-
-
                     const SizedBox(height: 20),
                     const Text(
                       "Detail Produk",
@@ -68,7 +103,7 @@ class DetailProduk extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     const Text(
-                      "Kopi hitam bubuk kadar kafein yang lebih tinggi dari kopi biasa dengan aroma yang tajam dan rasa pahit yang lebih tinggi. Bagi para coffee adict, kopi hitam bubuk ini sangat cocok untuk menemani disaat menugas dan menikmati sore hari.",
+                      "Kopi hitam bubuk kadar kafein yang lebih tinggi dari kopi biasa dengan aroma yang tajam dan rasa pahit yang lebih tinggi. Bagi para coffee addict, kopi hitam bubuk ini sangat cocok untuk menemani disaat menugas dan menikmati sore hari.",
                       style: TextStyle(
                         fontSize: 15,
                       ),
@@ -79,14 +114,15 @@ class DetailProduk extends StatelessWidget {
                       children: [
                         IconButton(
                           onPressed: () {
-                      
+                            _tambahkanKeKeranjang(context);
                           },
-                          icon: Icon(Icons.shopping_cart_checkout),
+                          icon: Icon(Icons.shopping_cart),
                           iconSize: 32,
                         ),
                         const SizedBox(width: 8),
                         ElevatedButton(
                           onPressed: () {
+                            // Tambahkan logika pembelian di sini
                           },
                           child: Text(
                             'Beli',

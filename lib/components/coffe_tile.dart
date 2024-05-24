@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kojuk_mobile/models/coffe.dart';
+import 'package:kojuk_mobile/pages/detail_produk.dart';
 
 class CoffeTile extends StatelessWidget {
   final Coffe coffe;
@@ -9,8 +10,20 @@ class CoffeTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Handle navigation to coffee detail page here
-        
+        // Navigasi ke halaman detail produk
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailProduk(
+              produk: {
+                'image': coffe.image,
+                'type': coffe.type,
+                'name': coffe.name,
+                'price': double.parse(coffe.price),
+              },
+            ),
+          ),
+        );
       },
       child: Container(
         margin: EdgeInsets.only(left: 25, top: 10, bottom: 10),
@@ -44,7 +57,7 @@ class CoffeTile extends StatelessWidget {
                 children: [
                   // Description
                   Text(
-                    coffe.description,
+                    coffe.type,
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                   SizedBox(height: 8),

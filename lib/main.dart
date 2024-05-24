@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:kojuk_mobile/home.dart';
+import 'package:kojuk_mobile/pages/keranjang.dart';
 import 'pages/login_page.dart';
 import 'pages/register_page.dart';
+import 'models/cart_model.dart'; // Import file yang berisi definisi CartModel
 
 void main() {
   runApp(MyApp());
@@ -14,26 +17,30 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      navigatorKey: navigatorKey,
-      initialRoute: '/login',
-      routes: {
-        '/login': (context) => LoginPage(),
-        '/register': (context) => RegisterPage(),
-        '/home':(context) => Home(),
-      },
-      onGenerateRoute: (settings) {
-        return MaterialPageRoute(
-          builder: (context) {
-            return const Scaffold(
-              body: Center(
-                child: Text('Halaman tidak ditemukan'),
-              ),
-            );
-          },
-        );
-      },
+    return ChangeNotifierProvider( // Tambahkan penyedia di sini
+      create: (context) => CartModel(), // Buat instance CartModel
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        navigatorKey: navigatorKey,
+        initialRoute: '/login',
+        routes: {
+          '/login': (context) => LoginPage(),
+          '/register': (context) => RegisterPage(),
+          '/home':(context) => Home(),
+          '/keranjang':(context) => Keranjang()
+        },
+        onGenerateRoute: (settings) {
+          return MaterialPageRoute(
+            builder: (context) {
+              return const Scaffold(
+                body: Center(
+                  child: Text('Halaman tidak ditemukan'),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

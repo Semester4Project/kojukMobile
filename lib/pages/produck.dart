@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:kojuk_mobile/pages/detail_produk.dart';
+import 'package:kojuk_mobile/pages/keranjang.dart';
 
-
-class Produk  extends StatefulWidget{
+class Produk extends StatefulWidget {
   @override
   _ProdukState createState() => _ProdukState();
 }
 
-class _ProdukState extends State<Produk>{
-   // Daftar produk
+class _ProdukState extends State<Produk> {
+  // Daftar produk
   TextEditingController _controller = TextEditingController();
   String _searchKeyword = '';
   List<Map<String, dynamic>> products = [
     {
-      'image': 'assets/images/kopi.png',
+      'image': 'assets/images/coffe.jpg',
       'type': 'kopi',
       'name': 'kopi Madura',
       'price': 50000,
@@ -69,18 +69,22 @@ class _ProdukState extends State<Produk>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:const Text('Produk'),
+        title: const Text('Produk'),
         actions: [
-          
           IconButton(
             icon: const Icon(Icons.shopping_cart_outlined),
             onPressed: () {
-              // Tambahkan fungsi ketika tombol keranjang ditekan
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Keranjang(),
+                ),
+              ); // Tambahkan fungsi ketika tombol keranjang ditekan
             },
           ),
         ],
         bottom: PreferredSize(
-          preferredSize:const Size.fromHeight(kToolbarHeight),
+          preferredSize: const Size.fromHeight(kToolbarHeight),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0), // Sesuaikan jaraknya di sini
             child: TextField(
@@ -97,9 +101,9 @@ class _ProdukState extends State<Produk>{
                     padding: const EdgeInsets.fromLTRB(0, 12, 12, 12), // Sesuaikan posisi tombol
                     child: Transform.scale(
                       scale: 1, // Ubah ukuran tombol
-                      child:const Icon(
+                      child: const Icon(
                         Icons.search,
-                        color:Color.fromRGBO(146, 37, 35, 1), // Warna ikon pencarian
+                        color: Color.fromRGBO(146, 37, 35, 1), // Warna ikon pencarian
                       ),
                     ),
                   ),
@@ -110,7 +114,7 @@ class _ProdukState extends State<Produk>{
                   borderRadius: BorderRadius.circular(25),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color:Color.fromRGBO(146, 37, 35, 1)), // Warna saat tidak mendapat fokus
+                  borderSide: const BorderSide(color: Color.fromRGBO(146, 37, 35, 1)), // Warna saat tidak mendapat fokus
                   borderRadius: BorderRadius.circular(25),
                 ),
               ),
@@ -124,64 +128,62 @@ class _ProdukState extends State<Produk>{
           ),
         ),
       ),
-
       body: GridView.builder(
-  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-    crossAxisCount: 2,
-    childAspectRatio: 0.8,
-  ),
-  itemCount: _searchResults.length,
-  itemBuilder: (context, index) {
-    final product = _searchResults[index];
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailProduk(produk: product),
-          ),
-        );
-      },
-      child: FractionallySizedBox(
-        widthFactor: 0.9,
-        child: Card(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Image.asset(
-                  product['image'],
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.8,
+        ),
+        itemCount: _searchResults.length,
+        itemBuilder: (context, index) {
+          final product = _searchResults[index];
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailProduk(produk: product),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              );
+            },
+            child: FractionallySizedBox(
+              widthFactor: 0.9,
+              child: Card(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      product['type'],
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Expanded(
+                      child: Image.asset(
+                        product['image'],
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                    SizedBox(height: 4),
-                    Text(product['name']),
-                    SizedBox(height: 4),
-                    Text(
-                      'Harga: Rp ${product['price'].toStringAsFixed(0)}', // Konversi harga menjadi string
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            product['type'],
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 4),
+                          Text(product['name']),
+                          SizedBox(height: 4),
+                          Text(
+                            'Harga: Rp ${product['price'].toStringAsFixed(0)}', // Konversi harga menjadi string
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
-
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
-  },
-)
-);
-}
+  }
 }
