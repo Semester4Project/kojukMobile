@@ -5,6 +5,7 @@ import 'package:kojuk_mobile/pages/keranjang.dart';
 import 'pages/login_page.dart';
 import 'pages/register_page.dart';
 import 'models/cart_model.dart'; // Import file yang berisi definisi CartModel
+import 'pages/checkout_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
           '/login': (context) => LoginPage(),
           '/register': (context) => RegisterPage(),
           '/home':(context) => Home(),
-          '/keranjang':(context) => Keranjang()
+          '/keranjang':(context) => Keranjang(),
+          '/checkout': (context) => CheckoutPage(),
         },
         onGenerateRoute: (settings) {
           return MaterialPageRoute(

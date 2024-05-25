@@ -26,13 +26,22 @@ class Keranjang extends StatelessWidget {
                 Row(
                   children: [
                     Checkbox(
-                      value: false,
-                      onChanged: (bool? value) {},
+                      value: cart.products.isNotEmpty &&
+                          cart.products.every((product) => cart.isChecked(cart.products.indexOf(product))),
+                      onChanged: (bool? value) {
+                        for (int i = 0; i < cart.products.length; i++) {
+                          if (cart.isChecked(i) != value) {
+                            cart.toggleCheckbox(i);
+                          }
+                        }
+                      },
                     ),
                     Text('Semua'),
                     Spacer(),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/checkout');
+                      },
                       child: Text(
                         'BELI',
                         style: TextStyle(
@@ -53,10 +62,8 @@ class Keranjang extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final product = cart.products[index];
                       return CartItem(
-                        imagePath: product.image,
-                        title: product.name,
-                        description: product.type,
-                        price: 'Rp ${product.price.toStringAsFixed(0)}',
+                        product: product,
+                        index: index,
                       );
                     },
                   ),
@@ -71,16 +78,12 @@ class Keranjang extends StatelessWidget {
 }
 
 class CartItem extends StatelessWidget {
-  final String imagePath;
-  final String title;
-  final String description;
-  final String price;
+  final Product product;
+  final int index;
 
   CartItem({
-    required this.imagePath,
-    required this.title,
-    required this.description,
-    required this.price,
+    required this.product,
+    required this.index,
   });
 
   @override
@@ -94,7 +97,7 @@ class CartItem extends StatelessWidget {
         child: Row(
           children: [
             Image.asset(
-              imagePath,
+              product.image,
               width: 40,
               height: 50,
             ),
@@ -103,13 +106,13 @@ class CartItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  product.name,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(description),
-                Text(price),
+                Text(product.type),
+                Text('Rp ${product.price.toStringAsFixed(0)}'),
               ],
             ),
             Spacer(),
@@ -117,25 +120,33 @@ class CartItem extends StatelessWidget {
               children: [
                 IconButton(
                   icon: Icon(Icons.add),
-                  onPressed: () {},
+                  onPressed: () {
+                    Provider.of<CartModel>(context, listen: false).increaseQuantity(index);
+                  },
                   color: Colors.brown,
                 ),
-                Text('1'),
+                Text('${product.quantity}'),
                 IconButton(
                   icon: Icon(Icons.remove),
-                  onPressed: () {},
+                  onPressed: () {
+                    Provider.of<CartModel>(context, listen: false).decreaseQuantity(index);
+                  },
                   color: Colors.brown,
                 ),
               ],
             ),
             IconButton(
               icon: Icon(Icons.delete),
-              onPressed: () {},
+              onPressed: () {
+                Provider.of<CartModel>(context, listen: false).removeProduct(index);
+              },
               color: Colors.brown,
             ),
             Checkbox(
-              value: false,
-              onChanged: (bool? value) {},
+              value: Provider.of<CartModel>(context).isChecked(index),
+              onChanged: (bool? value) {
+                Provider.of<CartModel>(context, listen: false).toggleCheckbox(index);
+              },
             ),
           ],
         ),
