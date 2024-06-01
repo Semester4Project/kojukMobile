@@ -4,8 +4,9 @@ import 'package:kojuk_mobile/home.dart';
 import 'package:kojuk_mobile/pages/keranjang.dart';
 import 'pages/login_page.dart';
 import 'pages/register_page.dart';
-import 'models/cart_model.dart'; // Import file yang berisi definisi CartModel
+import 'models/cart_model.dart'; 
 import 'pages/checkout_page.dart';
+import 'package:kojuk_mobile/pages/daftar_transaksi.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
           '/home':(context) => Home(),
           '/keranjang':(context) => Keranjang(),
           '/checkout': (context) => CheckoutPage(),
+          '/daftar_transaksi':(context) => DaftarTransaksi(),
         },
         onGenerateRoute: (settings) {
           return MaterialPageRoute(

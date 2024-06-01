@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kojuk_mobile/pages/keranjang.dart';
+import 'package:kojuk_mobile/pages/daftar_transaksi.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -73,7 +75,12 @@ class _ProfileState extends State<Profile> {
                 leading: const Icon(Icons.list_alt, color: Colors.brown),
                 title: const Text('Daftar Transaksi'),
                 onTap: () {
-                  // Navigate to transaction list
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DaftarTransaksi(),
+                      ),
+                    );
                 },
                 trailing: IconButton(
                   icon: Icon(Icons.arrow_forward_ios, color: Colors.brown),
@@ -87,7 +94,12 @@ class _ProfileState extends State<Profile> {
                 leading: const Icon(Icons.shopping_cart, color: Colors.brown),
                 title: const Text('Keranjang'),
                 onTap: () {
-                  // Navigate to shopping cart
+                 Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Keranjang(),
+                      ),
+                    ); // Navigate to shopping cart
                 },
                 trailing: IconButton(
                   icon: Icon(Icons.arrow_forward_ios, color: Colors.brown),
