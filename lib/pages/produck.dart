@@ -19,7 +19,7 @@ class _ProdukState extends State<Produk> {
       'price': 50000,
     },
     {
-      'image': 'assets/images/kopi.png',
+      'image': 'assets/images/coffe2.jpg',
       'type': 'Robusta',
       'name': 'Robusta Madura',
       'price': 50000,
@@ -154,7 +154,6 @@ class _ProdukState extends State<Produk> {
                     Expanded(
                       child: Image.asset(
                         product['image'],
-                        width: double.infinity,
                         fit: BoxFit.cover,
                       ),
                     ),
