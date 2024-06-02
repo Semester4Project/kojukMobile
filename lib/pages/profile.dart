@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kojuk_mobile/pages/keranjang.dart';
 import 'package:kojuk_mobile/pages/daftar_transaksi.dart';
+import 'package:kojuk_mobile/pages/edit_profile.dart';
+import 'dart:io';
 
 class Profile extends StatefulWidget {
   @override
@@ -8,23 +10,35 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  File? _profileImage;
+  String _username = 'Intan Puspitasari';
+  String _email = 'intan@gmail.com';
+  String _address = 'Jl. Sudirman No. 123';
+  String _phoneNumber = '081234567890';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.brown[700],
         title: const Text('Profile'),
         actions: [
           IconButton(
             icon: const Icon(Icons.shopping_cart_outlined),
             onPressed: () {
-              // Handle shopping cart button press
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Keranjang(),
+                ),
+              );
             },
           ),
         ],
       ),
       body: Container(
         width: double.infinity,
-        color: Colors.white, // Background color of the profile screen
+        color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -34,18 +48,40 @@ class _ProfileState extends State<Profile> {
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: AssetImage('assets/images/kucing.jpg'),
+                    backgroundImage: _profileImage != null
+                        ? FileImage(_profileImage!)
+                        : AssetImage('assets/images/kucing.jpg') as ImageProvider,
                   ),
                   Positioned(
                     right: 4,
                     bottom: 4,
                     child: InkWell(
                       onTap: () {
-                        // Handle edit profile picture
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditProfile(
+                              profileImage: _profileImage,
+                              username: _username,
+                              email: _email,
+                              address: _address,
+                              phoneNumber: _phoneNumber,
+                              onProfileUpdated: (File? image, String username, String email, String address, String phoneNumber) {
+                                setState(() {
+                                  _profileImage = image;
+                                  _username = username;
+                                  _email = email;
+                                  _address = address;
+                                  _phoneNumber = phoneNumber;
+                                });
+                              },
+                            ),
+                          ),
+                        );
                       },
                       child: CircleAvatar(
                         radius: 15,
-                        backgroundColor: Colors.brown[800], // Match color of icons
+                        backgroundColor: Colors.brown[800],
                         child: Icon(Icons.edit, size: 15, color: Colors.white),
                       ),
                     ),
@@ -53,62 +89,56 @@ class _ProfileState extends State<Profile> {
                 ],
               ),
               const SizedBox(height: 16),
-              const Text(
-                'Intan Puspitasari',
-                style: TextStyle(
+              Text(
+                _username,
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'intan@gmail.com',
-                style: TextStyle(
+              Text(
+                _email,
+                style: const TextStyle(
                   fontSize: 16,
                   color: Colors.grey,
                 ),
               ),
               const SizedBox(height: 32),
-              Divider(color: Colors.brown[800]), // Match color of icons
+              Divider(color: Colors.brown[800]),
               ListTile(
                 leading: const Icon(Icons.list_alt, color: Colors.brown),
                 title: const Text('Daftar Transaksi'),
-                onTap: () {
-                  Navigator.push(
+                trailing: IconButton(
+                  icon: Icon(Icons.arrow_forward_ios, color: Colors.brown),
+                  onPressed: () {
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => DaftarTransaksi(),
                       ),
                     );
-                },
-                trailing: IconButton(
-                  icon: Icon(Icons.arrow_forward_ios, color: Colors.brown),
-                  onPressed: () {
-                    // Navigate to transaction list
                   },
                 ),
               ),
-              Divider(color: Colors.brown[800]), // Match color of icons
+              Divider(color: Colors.brown[800]),
               ListTile(
                 leading: const Icon(Icons.shopping_cart, color: Colors.brown),
                 title: const Text('Keranjang'),
-                onTap: () {
-                 Navigator.push(
+                trailing: IconButton(
+                  icon: Icon(Icons.arrow_forward_ios, color: Colors.brown),
+                  onPressed: () {
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => Keranjang(),
                       ),
-                    ); // Navigate to shopping cart
-                },
-                trailing: IconButton(
-                  icon: Icon(Icons.arrow_forward_ios, color: Colors.brown),
-                  onPressed: () {
-                    // Navigate to shopping cart
+                    );
                   },
                 ),
               ),
-              Divider(color: Colors.brown[800]), // Match color of icons
+              Divider(color: Colors.brown[800]),
               ListTile(
                 leading: const Icon(Icons.exit_to_app, color: Colors.brown),
                 title: const Text('Sign Out'),
@@ -116,7 +146,7 @@ class _ProfileState extends State<Profile> {
                   // Handle sign out
                 },
               ),
-              Divider(color: Colors.brown[800]), // Match color of icons
+              Divider(color: Colors.brown[800]),
             ],
           ),
         ),
