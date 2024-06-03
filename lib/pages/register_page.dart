@@ -26,11 +26,11 @@ class RegisterPage extends StatelessWidget {
               children: [
                 const SizedBox(height: 10),
                 Image.asset(
-                  "assets/images/logo 2.png",
+                  "assets/images/logo.png",
                   height: 120,
                   width: 205,
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: 20),
                 Text(
                   'Create an account',
                   style: TextStyle(
@@ -62,7 +62,7 @@ class RegisterPage extends StatelessWidget {
                   hintText: 'Alamat',
                   obscureText: false,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 70),
                 MyButton(
                   buttonText: 'Register',
                   onTap: registerUser,

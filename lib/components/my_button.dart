@@ -11,8 +11,8 @@ class MyButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(25),
-        margin: const EdgeInsets.symmetric(horizontal: 25),
+        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.symmetric(horizontal: 15),
         decoration: BoxDecoration(
           color: Color.fromRGBO(118, 38, 37, 1),
           borderRadius: BorderRadius.circular(8),
@@ -22,8 +22,8 @@ class MyButton extends StatelessWidget {
             buttonText, // Gunakan properti buttonText untuk menentukan teks tombol
             style: const TextStyle(
               color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
+              fontWeight: FontWeight.normal,
+              fontSize: 20,
             ),
           ),
         ),

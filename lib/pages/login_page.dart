@@ -44,13 +44,14 @@ class LoginPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 50),
+                const SizedBox(height: 10),
                 // logo
                 Image.asset(
-                  "assets/images/logo 2.png",
-                  height: 150,
-                  width: 205,
+                  "assets/images/logo.png",
+                  height: 170,
+                  width: 225,
                 ),
+                const SizedBox(height: 10),
 
                 // welcome back, you've been missed!
                 Text(
@@ -102,7 +103,7 @@ class LoginPage extends StatelessWidget {
                   onTap: () => signUserIn(context), // panggil signUserIn dengan context
                 ),
 
-                const SizedBox(height: 70),
+                const SizedBox(height: 120),
 
                 // or continue with
 
