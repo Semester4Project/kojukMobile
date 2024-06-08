@@ -1,18 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:kojuk_mobile/components/my_textfield.dart';
 import 'package:kojuk_mobile/components/my_button.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert'; 
 
 class RegisterPage extends StatelessWidget {
   RegisterPage({super.key});
 
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  
 
-  void registerUser() {
-    // Implement logic to register user here
+  void registerUser(BuildContext context) async {
+  if (usernameController.text.isEmpty || passwordController.text.isEmpty || emailController.text.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Center(
+          child: Text(
+            'Semua field wajib diisi.',
+            textAlign: TextAlign.center,
+          ),
+        ),
+        backgroundColor: Colors.grey,
+      ),
+    );
+    return;
   }
+
+  try {
+    String url = 'http://127.0.0.1:8000/api/auth/register';
+    var response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'username': usernameController.text,
+        'password': passwordController.text,
+        'email': emailController.text,
+      }),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      Navigator.pushNamed(context, '/login');
+    } else {
+      var responseBody = jsonDecode(response.body);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Center(
+            child: Text(
+              'Pendaftaran gagal: ${responseBody['message']}', // Tampilkan pesan error dari server
+              textAlign: TextAlign.center,
+            ),
+          ),
+          backgroundColor: Colors.grey,
+        ),
+      );
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Center(
+          child: Text(
+            'Terjadi kesalahan. Silakan coba lagi.',
+            textAlign: TextAlign.center,
+          ),
+        ),
+        backgroundColor: Colors.grey,
+      ),
+    );
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -45,27 +105,21 @@ class RegisterPage extends StatelessWidget {
                   obscureText: false,
                 ),
                 const SizedBox(height: 10),
+                 const SizedBox(height: 10),
                 MyTextField(
+                  controller: emailController,
+                  hintText: 'Email',
+                  obscureText: false,
+                ),
+                 MyTextField(
                   controller: passwordController,
                   hintText: 'Password',
                   obscureText: true,
                 ),
-                const SizedBox(height: 10),
-                MyTextField(
-                  controller: nameController,
-                  hintText: 'Nama',
-                  obscureText: false,
-                ),
-                const SizedBox(height: 10),
-                MyTextField(
-                  controller: addressController,
-                  hintText: 'Alamat',
-                  obscureText: false,
-                ),
                 const SizedBox(height: 70),
                 MyButton(
-                  buttonText: 'Register',
-                  onTap: registerUser,
+                 buttonText: 'Register',
+                 onTap: () => registerUser(context),
                 ),
                 const SizedBox(height: 70),
                 Row(
