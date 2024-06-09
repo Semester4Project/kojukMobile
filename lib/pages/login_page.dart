@@ -1,3 +1,5 @@
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:kojuk_mobile/components/my_textfield.dart';
 import 'package:kojuk_mobile/components/my_button.dart';
@@ -6,31 +8,66 @@ class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
   // text editing controllers
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   // method untuk mengecek dan melakukan proses login
-  void signUserIn(BuildContext context) {
-    // periksa apakah kedua field diisi
-    if (usernameController.text.isEmpty || passwordController.text.isEmpty) {
-      // jika salah satu atau kedua field kosong, tampilkan snackbar sebagai peringatan
+  void signUserIn(BuildContext context) async {
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-           content: Center(
-      child: Text(
-        'Username atau password wajib diisi.',
-        textAlign: TextAlign.center,
-      ),
-    ),
-    backgroundColor: Colors.grey,
+          content: Center(
+            child: Text(
+              'Email atau password wajib diisi.',
+              textAlign: TextAlign.center,
+            ),
+          ),
+          backgroundColor: Colors.grey,
         ),
       );
-    } else {
-      // jika kedua field sudah diisi, lakukan proses login
-      // Anda dapat menambahkan logika login sesuai dengan kebutuhan Anda di sini
+      return;
+    }
 
-      // contoh: navigasi ke halaman dashboard setelah login berhasil
-      Navigator.pushNamed(context, '/home');
+    try {
+      String url = 'http://127.0.0.1:8000/api/auth/login';
+      var response = await http.post(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': emailController.text,
+          'password': passwordController.text,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        Navigator.pushNamed(context, '/home');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Center(
+              child: Text(
+                'Login gagal. Silakan periksa kembali username dan password Anda.',
+                textAlign: TextAlign.center,
+              ),
+            ),
+            backgroundColor: Colors.grey,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Center(
+            child: Text(
+              'Terjadi kesalahan. Silakan coba lagi.',
+              textAlign: TextAlign.center,
+            ),
+          ),
+          backgroundColor: Colors.grey,
+        ),
+      );
     }
   }
 
@@ -66,8 +103,8 @@ class LoginPage extends StatelessWidget {
 
                 // username textfield
                 MyTextField(
-                  controller: usernameController,
-                  hintText: 'Username',
+                  controller: emailController,
+                  hintText: 'Masukkan Email',
                   obscureText: false,
                 ),
                 const SizedBox(height: 5),
@@ -75,21 +112,28 @@ class LoginPage extends StatelessWidget {
                 // password textfield
                 MyTextField(
                   controller: passwordController,
-                  hintText: 'Password',
+                  hintText: 'Masukkan Password',
                   obscureText: true,
                 ),
                 const SizedBox(height: 10),
 
                 // forgot password?
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(
-                        'Forgot Password?',
-                        style: TextStyle(
-                            color: Color.fromRGBO(118, 38, 37, 1)),
+                      GestureDetector(
+                        onTap: () {
+                          // Navigasi ke halaman lupa password saat teks "Forgot Password?" ditekan
+                          Navigator.pushNamed(context, '/forgot-password');
+                        },
+                        child: const Text(
+                          'Forgot Password?',
+                          style: TextStyle(
+                            color: Color.fromRGBO(118, 38, 37, 1),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -104,7 +148,7 @@ class LoginPage extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 120),
-
+ 
                 // or continue with
 
                 // google + apple sign in buttons
