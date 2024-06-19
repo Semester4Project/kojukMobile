@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:kojuk_mobile/components/my_textfield.dart';
 import 'package:kojuk_mobile/components/my_button.dart';
 
@@ -42,6 +43,18 @@ class LoginPage extends StatelessWidget {
       );
 
       if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        var user = data['user'];
+
+        // Simpan data pengguna ke SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setInt('user_id', user['user_id']);
+        await prefs.setString('username', user['username']);
+        await prefs.setString('email', user['email']);
+        if (user['profile_picture'] != null) {
+          await prefs.setString('profile_picture', user['profile_picture']);
+        }
+
         Navigator.pushNamed(context, '/home');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -148,10 +161,6 @@ class LoginPage extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 120),
- 
-                // or continue with
-
-                // google + apple sign in buttons
 
                 // not a member? register now
                 Row(

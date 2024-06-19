@@ -204,12 +204,12 @@ class _ProfileState extends State<Profile> {
                   trailing: IconButton(
                     icon: Icon(Icons.arrow_forward_ios, color: Colors.brown),
                     onPressed: () {
-                      /*Navigator.push(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => AlamatPage(),
                         ),
-                      );*/// Navigate to address management screen (to be implemented)
+                      );// Navigate to address management screen (to be implemented)
                     },
                   ),
                 ),
