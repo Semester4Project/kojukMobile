@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfile extends StatefulWidget {
   final File? profileImage;
   final String username;
   final String email;
-  final String address;
-  final String phoneNumber;
   final Function(File?, String, String, String, String) onProfileUpdated;
 
   EditProfile({
     required this.profileImage,
     required this.username,
     required this.email,
-    required this.address,
-    required this.phoneNumber,
     required this.onProfileUpdated,
   });
 
@@ -27,8 +24,6 @@ class _EditProfileState extends State<EditProfile> {
   final _formKey = GlobalKey<FormState>();
   late String _username;
   late String _email;
-  late String _address;
-  late String _phoneNumber;
   File? _image;
 
   final ImagePicker _picker = ImagePicker();
@@ -38,8 +33,6 @@ class _EditProfileState extends State<EditProfile> {
     super.initState();
     _username = widget.username;
     _email = widget.email;
-    _address = widget.address;
-    _phoneNumber = widget.phoneNumber;
     _image = widget.profileImage;
   }
 
@@ -52,13 +45,21 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
-  void _saveProfile() {
+  Future<void> _saveProfile() async {
     if (_formKey.currentState?.validate() ?? false) {
       _formKey.currentState?.save();
-      widget.onProfileUpdated(_image, _username, _email, _address, _phoneNumber);
+      
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      if (_image != null) {
+        await prefs.setString('profile_picture', _image!.path);
+      }
+      await prefs.setString('username', _username);
+      await prefs.setString('email', _email);
+
+      widget.onProfileUpdated(_image, _username, _email, '', '');
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Profile berhasil di perbarui!')),
+        SnackBar(content: Text('Profile berhasil diperbarui!')),
       );
     }
   }
@@ -77,55 +78,57 @@ class _EditProfileState extends State<EditProfile> {
           child: ListView(
             children: [
               Center(
-                child: Stack(
-                  children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: _image != null
-                          ? FileImage(_image!)
-                          : AssetImage('assets/images/kucing.jpg') as ImageProvider,
-                    ),
-                    Positioned(
-                      right: 4,
-                      bottom: 4,
-                      child: InkWell(
-                        onTap: () {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return SafeArea(
-                                child: Wrap(
-                                  children: <Widget>[
-                                    ListTile(
-                                      leading: Icon(Icons.photo_library),
-                                      title: Text('Gallery'),
-                                      onTap: () {
-                                        _pickImage(ImageSource.gallery);
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                    ListTile(
-                                      leading: Icon(Icons.photo_camera),
-                                      title: Text('Camera'),
-                                      onTap: () {
-                                        _pickImage(ImageSource.camera);
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        child: CircleAvatar(
-                          radius: 15,
-                          backgroundColor: Colors.brown[800],
-                          child: Icon(Icons.edit, size: 15, color: Colors.white),
+                child: RepaintBoundary(
+                  child: Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundImage: _image != null
+                            ? FileImage(_image!)
+                            : AssetImage('assets/images/profile1.jpg') as ImageProvider,
+                      ),
+                      Positioned(
+                        right: 4,
+                        bottom: 4,
+                        child: GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return SafeArea(
+                                  child: Wrap(
+                                    children: <Widget>[
+                                      ListTile(
+                                        leading: Icon(Icons.photo_library),
+                                        title: Text('Gallery'),
+                                        onTap: () async {
+                                          await _pickImage(ImageSource.gallery);
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      ListTile(
+                                        leading: Icon(Icons.photo_camera),
+                                        title: Text('Camera'),
+                                        onTap: () async {
+                                          await _pickImage(ImageSource.camera);
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          child: CircleAvatar(
+                            radius: 15,
+                            backgroundColor: Colors.brown[800],
+                            child: Icon(Icons.edit, size: 15, color: Colors.white),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -164,42 +167,6 @@ class _EditProfileState extends State<EditProfile> {
                   _email = value!;
                 },
               ),
-              const SizedBox(height: 16),
-              TextFormField(
-                initialValue: _address,
-                decoration: InputDecoration(
-                  labelText: 'Alamat',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Masukkan alamat';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _address = value!;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                initialValue: _phoneNumber,
-                decoration: InputDecoration(
-                  labelText: 'Phone Number',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a phone number';
-                  } else if (!RegExp(r'^\d+$').hasMatch(value)) {
-                    return 'Please enter a valid phone number';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _phoneNumber = value!;
-                },
-              ),
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: _saveProfile,
@@ -207,7 +174,7 @@ class _EditProfileState extends State<EditProfile> {
                   backgroundColor: Colors.brown[700],
                 ),
                 child: const Text(
-                  'Simpan Peruban',
+                  'Simpan Perubahan',
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -218,4 +185,3 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 }
- 
