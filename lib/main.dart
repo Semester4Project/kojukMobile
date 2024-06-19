@@ -7,6 +7,9 @@ import 'pages/register_page.dart';
 import 'models/cart_model.dart'; 
 import 'pages/checkout_page.dart';
 import 'package:kojuk_mobile/pages/daftar_transaksi.dart';
+import 'pages/splashscrren_page.dart';
+import 'pages/alamat_page.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -24,14 +27,16 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         navigatorKey: navigatorKey,
-        initialRoute: '/login',
+        initialRoute: '/splash',
         routes: {
+          '/splash': (context) => SplashScreen(),
           '/login': (context) => LoginPage(),
           '/register': (context) => RegisterPage(),
           '/home':(context) => Home(),
           '/keranjang':(context) => Keranjang(),
           '/checkout': (context) => CheckoutPage(),
           '/daftar_transaksi':(context) => DaftarTransaksi(),
+          '/alamat':(context) => AlamatPage(),
         },
         onGenerateRoute: (settings) {
           return MaterialPageRoute(
