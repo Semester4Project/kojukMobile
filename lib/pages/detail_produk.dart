@@ -45,103 +45,112 @@ class DetailProduk extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            expandedHeight: 300.0,
-            flexibleSpace: Stack(
-              children: [
-                Positioned.fill(
-                  child: Image.asset(
-                    produk['image'],
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Positioned(
-                  top: 30,
-                  left: 40,
-                  child: Column(
+      body: Stack(
+        children: [
+          CustomScrollView(
+            slivers: <Widget>[
+              SliverAppBar(
+                expandedHeight: 300.0,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Stack(
                     children: [
-                      Text(
-                        produk['name'],
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
+                      Positioned.fill(
+                        child: Image.network(
+                          produk['image'],
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 20,
+                        left: 20,
+                        child: Text(
+                          produk['name'],
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 30,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 10.0,
+                                color: Colors.black,
+                                offset: Offset(2.0, 2.0),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Jenis: ${produk['type']}',
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      'Harga: Rp ${produk['price'].toStringAsFixed(0)}',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      "Detail Produk",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      "Kopi hitam bubuk kadar kafein yang lebih tinggi dari kopi biasa dengan aroma yang tajam dan rasa pahit yang lebih tinggi. Bagi para coffee addict, kopi hitam bubuk ini sangat cocok untuk menemani disaat menugas dan menikmati sore hari.",
-                      style: TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+              ),
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        IconButton(
-                          onPressed: () {
-                            _tambahkanKeKeranjang(context);
-                          },
-                          icon: Icon(Icons.shopping_cart),
-                          iconSize: 32,
+                        Text(
+                          'Jenis: ${produk['type']}',
+                          style: const TextStyle(fontSize: 20),
                         ),
-                        const SizedBox(width: 8),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Tambahkan logika pembelian di sini
-                          },
-                          child: Text(
-                            'Beli',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                            ),
+                        const SizedBox(height: 3),
+                        Text(
+                          'Harga: Rp ${produk['price'].toStringAsFixed(0)}',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 3), // Space between price and stock
+                        Text(
+                          'Stok: ${produk['stock']}',
+                          style: TextStyle(fontSize: 14, color: Color.fromRGBO(118, 38, 37, 1)),
+                        ),
+                        const SizedBox(height: 20),
+                        const Text(
+                          "Detail Produk",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
                           ),
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(horizontal: 70, vertical: 20),
-                            backgroundColor: Color.fromRGBO(118, 38, 37, 1),
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          produk['description'],
+                          style: TextStyle(
+                            fontSize: 15,
                           ),
                         ),
                       ],
                     ),
-                  ],
+                  ),
+                  const SizedBox(height: 100), // Add extra space at the bottom
+                ]),
+              ),
+            ],
+          ),
+          Positioned(
+            bottom: 20,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  _tambahkanKeKeranjang(context);
+                },
+                icon: Icon(Icons.shopping_cart, color: Colors.white), // Changed icon color to white
+                label: Text(
+                  'Tambahkan ke Keranjang',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
                 ),
-              )
-            ]),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 70, vertical: 20),
+                  backgroundColor: Color.fromRGBO(118, 38, 37, 1),
+                ),
+              ),
+            ),
           ),
         ],
       ),

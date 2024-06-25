@@ -11,40 +11,29 @@ class EditAlamatPage extends StatefulWidget {
 
 class _EditAlamatPageState extends State<EditAlamatPage> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _namaController;
-  late TextEditingController _noHpController;
-  late TextEditingController _provinsiController;
-  late TextEditingController _kabupatenController;
-  late TextEditingController _kecamatanController;
-  late TextEditingController _desaController;
-  late TextEditingController _detailAlamatController;
-  late TextEditingController _kodePosController;
+  final Map<String, String> _formData = {
+    'nama': '',
+    'noHp': '',
+    'provinsi': '',
+    'kabupaten': '',
+    'kecamatan': '',
+    'desa': '',
+    'kodePos': '',
+    'detailAlamat': '',
+  };
 
   @override
   void initState() {
     super.initState();
-    _namaController = TextEditingController(text: widget.alamat?['nama']);
-    _noHpController = TextEditingController(text: widget.alamat?['noHp']);
-    _provinsiController = TextEditingController(text: widget.alamat?['provinsi']);
-    _kabupatenController = TextEditingController(text: widget.alamat?['kabupaten']);
-    _kecamatanController = TextEditingController(text: widget.alamat?['kecamatan']);
-    _desaController = TextEditingController(text: widget.alamat?['desa']);
-    _detailAlamatController = TextEditingController(text: widget.alamat?['detailAlamat']);
-    _kodePosController = TextEditingController(text: widget.alamat?['kodePos']);
+    if (widget.alamat != null) {
+      _formData.addAll(widget.alamat!);
+    }
   }
 
-  void _simpanAlamat() {
+  void _saveForm() {
     if (_formKey.currentState!.validate()) {
-      Navigator.pop(context, {
-        'nama': _namaController.text,
-        'noHp': _noHpController.text,
-        'provinsi': _provinsiController.text,
-        'kabupaten': _kabupatenController.text,
-        'kecamatan': _kecamatanController.text,
-        'desa': _desaController.text,
-        'detailAlamat': _detailAlamatController.text,
-        'kodePos': _kodePosController.text,
-      });
+      _formKey.currentState!.save();
+      Navigator.pop(context, _formData);
     }
   }
 
@@ -58,99 +47,118 @@ class _EditAlamatPageState extends State<EditAlamatPage> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextFormField(
-                  controller: _namaController,
-                  decoration: InputDecoration(labelText: 'Nama'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Nama tidak boleh kosong';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: _noHpController,
-                  decoration: InputDecoration(labelText: 'No HP'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'No HP tidak boleh kosong';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: _provinsiController,
-                  decoration: InputDecoration(labelText: 'Provinsi'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Provinsi tidak boleh kosong';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: _kabupatenController,
-                  decoration: InputDecoration(labelText: 'Kabupaten/Kota'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Kabupaten/Kota tidak boleh kosong';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: _kecamatanController,
-                  decoration: InputDecoration(labelText: 'Kecamatan'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Kecamatan tidak boleh kosong';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: _desaController,
-                  decoration: InputDecoration(labelText: 'Desa'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Desa tidak boleh kosong';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: _detailAlamatController,
-                  decoration: InputDecoration(labelText: 'Detail Alamat Lainnya'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Detail Alamat tidak boleh kosong';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: _kodePosController,
-                  decoration: InputDecoration(labelText: 'Kode Pos'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Kode Pos tidak boleh kosong';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: _simpanAlamat,
-                    child: Text('Simpan'),
-                  ),
-                ),
-              ],
-            ),
+          child: ListView(
+            children: [
+              TextFormField(
+                initialValue: _formData['nama'],
+                decoration: InputDecoration(labelText: 'Nama'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Nama harus diisi';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _formData['nama'] = value!;
+                },
+              ),
+              TextFormField(
+                initialValue: _formData['noHp'],
+                decoration: InputDecoration(labelText: 'Nomor HP'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Nomor HP harus diisi';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _formData['noHp'] = value!;
+                },
+              ),
+              TextFormField(
+                initialValue: _formData['provinsi'],
+                decoration: InputDecoration(labelText: 'Provinsi'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Provinsi harus diisi';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _formData['provinsi'] = value!;
+                },
+              ),
+              TextFormField(
+                initialValue: _formData['kabupaten'],
+                decoration: InputDecoration(labelText: 'Kabupaten/Kota'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Kabupaten/Kota harus diisi';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _formData['kabupaten'] = value!;
+                },
+              ),
+              TextFormField(
+                initialValue: _formData['kecamatan'],
+                decoration: InputDecoration(labelText: 'Kecamatan'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Kecamatan harus diisi';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _formData['kecamatan'] = value!;
+                },
+              ),
+              TextFormField(
+                initialValue: _formData['desa'],
+                decoration: InputDecoration(labelText: 'Desa'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Desa harus diisi';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _formData['desa'] = value!;
+                },
+              ),
+              TextFormField(
+                initialValue: _formData['kodePos'],
+                decoration: InputDecoration(labelText: 'Kode Pos'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Kode Pos harus diisi';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _formData['kodePos'] = value!;
+                },
+              ),
+              TextFormField(
+                initialValue: _formData['detailAlamat'],
+                decoration: InputDecoration(labelText: 'Detail Alamat'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Detail Alamat harus diisi';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  _formData['detailAlamat'] = value!;
+                },
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _saveForm,
+                child: Text('Simpan'),
+              ),
+            ],
           ),
         ),
       ),

@@ -4,6 +4,10 @@ import 'dart:convert';
 import 'edit_alamat_page.dart';
 
 class AlamatPage extends StatefulWidget {
+  final bool isSelectingAddress;
+
+  AlamatPage({this.isSelectingAddress = false});
+
   @override
   _AlamatPageState createState() => _AlamatPageState();
 }
@@ -22,14 +26,18 @@ class _AlamatPageState extends State<AlamatPage> {
     String? alamatString = prefs.getString('alamatList');
     if (alamatString != null) {
       setState(() {
-        alamatList = List<Map<String, String>>.from(json.decode(alamatString));
+        List<dynamic> jsonData = json.decode(alamatString);
+        alamatList = jsonData.map((item) => Map<String, String>.from(item)).toList();
       });
     }
+    print('Loaded addresses: $alamatList'); // Debug print
   }
 
-  Future<void> _saveAlamat() async {
+  Future<void> _saveAlamatList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('alamatList', json.encode(alamatList));
+    String encodedAlamatList = json.encode(alamatList);
+    print('Saving addresses: $encodedAlamatList'); // Debug print
+    await prefs.setString('alamatList', encodedAlamatList);
   }
 
   void _navigateToEditAlamatPage([Map<String, String>? alamat]) async {
@@ -39,16 +47,18 @@ class _AlamatPageState extends State<AlamatPage> {
         builder: (context) => EditAlamatPage(alamat: alamat),
       ),
     );
-    if (result != null) {
+    if (result != null && result is Map<String, String>) {
       setState(() {
         if (alamat == null) {
           alamatList.add(result);
         } else {
           int index = alamatList.indexOf(alamat);
-          alamatList[index] = result;
+          if (index != -1) {
+            alamatList[index] = result;
+          }
         }
-        _saveAlamat();
       });
+      await _saveAlamatList(); // Save the updated alamatList to SharedPreferences
     }
   }
 
@@ -77,7 +87,10 @@ class _AlamatPageState extends State<AlamatPage> {
                           Text('${alamat['desa']}, ${alamat['kecamatan']}, ${alamat['kabupaten']}, ${alamat['provinsi']}, ID ${alamat['kodePos']}'),
                         ],
                       ),
-                      onTap: () => _navigateToEditAlamatPage(alamat),
+                      onTap: widget.isSelectingAddress
+                          ? () => Navigator.pop(context, alamat)
+                          : () => _navigateToEditAlamatPage(alamat),
+                      onLongPress: () => _navigateToEditAlamatPage(alamat),
                     ),
                   ),
                 );
